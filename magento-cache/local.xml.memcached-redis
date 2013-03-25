@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   Mage
+ * @package    Mage_Core
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <global>
+        <install>
+            <date><![CDATA[Mon, 19 Nov 2012 17:50:03 +0000]]></date>
+        </install>
+        <crypt>
+            <key><![CDATA[821487f84347f175e8833997aa540987]]></key>
+        </crypt>
+        <disable_local_modules>false</disable_local_modules>
+        <resources>
+            <db>
+                <table_prefix><![CDATA[]]></table_prefix>
+            </db>
+            <default_setup>
+                <connection>
+                    <host><![CDATA[db-hostname]]></host>
+                    <username><![CDATA[dbusername]]></username>
+                    <password><![CDATA[dbpassword]]></password>
+                    <dbname><![CDATA[dbname]]></dbname>
+                    <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
+                    <model><![CDATA[mysql4]]></model>
+                    <type><![CDATA[pdo_mysql]]></type>
+                    <pdoType><![CDATA[]]></pdoType>
+                    <active>1</active>
+                </connection>
+            </default_setup>
+        </resources>
+        <session_save><![CDATA[memcache]]></session_save>
+        <session_save_path><![CDATA[tcp://IP.ADD.RE.SS:11211?persistent=1&weight=2&timeout=10&retry_interval=10]]></session_save_path>
+        <cache>
+          <backend>memcached</backend>
+          <slow_backend>Cm_Cache_Backend_Redis</slow_backend>
+          <default_priority>10</default_priority>
+          <auto_refresh_fast_cache>1</auto_refresh_fast_cache>
+          <memcached>
+            <servers>
+              <server>
+                <host><![CDATA[IP.ADD.RE.SS]]></host>
+                <port><![CDATA[11212]]></port>
+                <persistent><![CDATA[1]]></persistent>
+                <weight><![CDATA[1]]></weight>
+                <timeout><![CDATA[5]]></timeout>
+              </server>
+            </servers>
+          </memcached>
+          <slow_backend_options>
+            <server>cache-hostname</server>
+            <port>6379</port>
+            <persistent><![CDATA[cache-db0]]></persistent>
+            <database>0</database>
+            <password></password>
+            <force_standalone>0</force_standalone> <!-- 0 for phpredis, 1 for standalone php -->
+            <connect_retries>1</connect_retries>
+            <read_timeout>10</read_timeout>
+            <automatic_cleaning_factor>0</automatic_cleaning_factor>
+            <compress_data>1</compress_data>
+            <compress_tags>1</compress_tags>
+            <compress_threshold>204800</compress_threshold>
+            <compression_lib>gzip</compression_lib>
+          </slow_backend_options>
+        </cache>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <frontName><![CDATA[admin]]></frontName>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>
