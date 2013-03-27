@@ -1,0 +1,71 @@
+<VirtualHost IP.ADD.RE.SS:80>
+
+  SuexecUserGroup example example
+
+  DocumentRoot /home/example/example.com/html
+  ServerName example.com
+
+  ServerAlias www.example.com ftp.example.com mail.example.com
+  ServerAdmin webmaster@example.com
+
+  # subdomain logic
+  RewriteEngine On
+  RewriteOptions inherit
+  RewriteCond %{HTTP_HOST} !^www\.example\.com [NC]
+  RewriteCond %{HTTP_HOST} !^mce000-lb\.example\.com [NC]
+  RewriteCond %{HTTP_HOST} ^([A-Z0-9a-z-.]+)\.example\.com [NC]
+  RewriteCond %{DOCUMENT_ROOT}/%1 -d
+  <IfModule mod_fastcgi.c>
+  RewriteCond %{REQUEST_URI} !^/php\.fcgi
+  </IfModule>
+  RewriteRule ^(.+) %{HTTP_HOST}/$1 [C]
+  RewriteRule ^([0-9A-Za-z-.]+)\.example\.com/?(.*)$ %{DOCUMENT_ROOT}/$1/$2 [L]
+
+  RewriteCond %{HTTP_HOST} ^www\.([A-Z0-9a-z-.]+)\.example\.com [NC]
+  RewriteCond %{DOCUMENT_ROOT}/%1 -d
+  RewriteRule ^(.+) %{HTTP_HOST}/$1 [C]
+  <IfModule mod_fastcgi.c>
+  RewriteCond %{REQUEST_URI} !^/php\.fcgi
+  </IfModule>
+  RewriteRule ^www\.([0-9A-Za-z-.]+)\.example\.com/?(.*)$ %{DOCUMENT_ROOT}/$1/$2 [L]
+  # end subdomain logic
+
+  ErrorLog /var/log/interworx/example.com/logs/error.log
+  CustomLog /var/log/interworx/example.com/logs/transfer.log combined
+
+  # php: default  don't edit between this and the "end php" comment below
+  <IfModule mod_suphp.c>
+    suPHP_Engine On
+    suPHP_UserGroup example example
+    AddHandler x-httpd-php .php
+    suPHP_AddHandler x-httpd-php .php
+    suPHP_ConfigPath /home/example/etc
+  </IfModule>
+
+  <IfModule !mod_suphp.c>
+    <IfModule mod_php5.c>
+      php_admin_flag engine On
+    </IfModule>
+    <IfModule mod_php4.c>
+      php_admin_flag engine On
+    </IfModule>
+  </IfModule>
+  
+  <IfModule mod_fastcgi.c>
+    Alias /php.fcgi /dev/shm/example-php.fcgi
+  </IfModule>
+  # end php
+
+  # cgi: 1 don't edit between this and the "end cgi" comment below
+  <Directory /home/example/example.com/html>
+    AllowOverride  All
+  </Directory>
+
+  <Location />
+    Options +ExecCGI
+  </Location>
+  ScriptAlias /cgi-bin/ /home/example/example.com/html/cgi-bin/
+  # end cgi
+
+</VirtualHost>
+

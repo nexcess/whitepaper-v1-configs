@@ -1,0 +1,36 @@
+server {
+	listen IP.ADD.RE.SS:80;
+
+    server_name example.com;
+	root /chroot/example/html;
+	index index.php;
+
+	location / {
+		index index.php index.html;
+		try_files $uri $uri/ @handler;
+		expires 30d;
+	}
+
+	location ^~ /(app|includes|lib|media/downloadable|pkginfo|report/config.xml|var)/ { internal; }
+
+	location /var/export/ { internal; }
+  
+	location /. { return 404; }
+  
+	location @handler { rewrite / /index.php; }
+  
+	location ~* .php/ { rewrite ^(.*.php)/ $1 last; }
+  
+	location ~* .php$ {
+		if (!-e $request_filename) { rewrite / /index.php last; }
+		expires off;
+		fastcgi_pass unix:/dev/shm/example-php.sock;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param MAGE_RUN_CODE default;
+		fastcgi_param MAGE_RUN_TYPE store;
+		include fastcgi_params;
+	}
+  
+	error_log /var/log/interworx/example.com/logs/error.log error;
+	access_log /var/log/interworx/example.com/logs/transfer.log main;
+} 
